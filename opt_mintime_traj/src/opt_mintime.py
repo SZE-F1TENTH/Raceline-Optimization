@@ -563,8 +563,8 @@ def opt_mintime(reftrack: np.ndarray,
     # boundary constraint: lift initial conditions
     Xk = ca.MX.sym('X0', nx)
     w.append(Xk)
-    n_min = (-w_tr_right_interp(0) + pars["optim_opts"]["width_opt"] / 2) / n_s
-    n_max = (w_tr_left_interp(0) - pars["optim_opts"]["width_opt"] / 2) / n_s
+    n_min = float((-w_tr_right_interp(0) + pars["optim_opts"]["width_opt"] / 2) / n_s)
+    n_max = float((w_tr_left_interp(0) - pars["optim_opts"]["width_opt"] / 2) / n_s)
     if pars["pwr_params_mintime"]["pwr_behavior"]:
         lbw.append([v_min, beta_min, omega_z_min, n_min, xi_min,
                     machine.temp_min, batt.temp_min, inverter.temp_min,
@@ -676,8 +676,8 @@ def opt_mintime(reftrack: np.ndarray,
         # add new decision variables for state at end of the collocation interval
         Xk = ca.MX.sym('X_' + str(k + 1), nx)
         w.append(Xk)
-        n_min = (-w_tr_right_interp(k + 1) + pars["optim_opts"]["width_opt"] / 2.0) / n_s
-        n_max = (w_tr_left_interp(k + 1) - pars["optim_opts"]["width_opt"] / 2.0) / n_s
+        n_min = float((-w_tr_right_interp(k + 1) + pars["optim_opts"]["width_opt"] / 2.0) / n_s)
+        n_max = float((w_tr_left_interp(k + 1) - pars["optim_opts"]["width_opt"] / 2.0) / n_s)
         if pars["pwr_params_mintime"]["pwr_behavior"]:
             lbw.append([v_min, beta_min, omega_z_min, n_min, xi_min,
                         machine.temp_min, batt.temp_min, inverter.temp_min,

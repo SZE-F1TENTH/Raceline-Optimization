@@ -26,12 +26,12 @@ This script has to be executed to generate an optimal trajectory based on a give
 F1TENTH ROS code.
 """
 
-
 # Create the parser and add arguments with defaults and explicit names
 parser = argparse.ArgumentParser(description='Generate optimal trajectory for F1TENTH racing.')
 parser.add_argument('--map_name', type=str, default='e7_floor5_square', help='Name of the map (default: e7_floor5_square)')
 parser.add_argument('--map_path', type=str, default='', help='Path to the map centerline (should be a .csv), defaults to inputs/tracks/<map_name>.csv')
 parser.add_argument('--export_path', type=str, default='', help='Path to copy from the filepath in the /outputs')
+parser.add_argument('--opt_type', type=str, default='shortest_path', choices=['shortest_path', 'mincurv', 'mincurv_iqp', 'mintime'],)
 
 args = parser.parse_args()
 
@@ -39,6 +39,7 @@ args = parser.parse_args()
 MAP_NAME = args.map_name
 MAP_PATH = args.map_path
 EXPORT_PATH = args.export_path
+OPT_TYPE = args.opt_type
 
 # MAP_NAME = "hubble_small"
 # MAP_NAME = "Hockenheim_map"
@@ -54,10 +55,10 @@ file_paths = {"veh_params_file": "f110.ini"}
 debug = True                                    # print console messages
 plot_opts = {"mincurv_curv_lin": False,         # plot curv. linearization (original and solution based) (mincurv only)
              "raceline": True,                  # plot optimized path
-             "imported_bounds": True,          # plot imported bounds (analyze difference to interpolated bounds)
-             "raceline_curv": False,             # plot curvature profile of optimized path
+             "imported_bounds": True,           # plot imported bounds (analyze difference to interpolated bounds)
+             "raceline_curv": False,            # plot curvature profile of optimized path
              "racetraj_vel": True,              # plot velocity profile
-             "racetraj_vel_3d": True,          # plot 3D velocity profile above raceline
+             "racetraj_vel_3d": True,           # plot 3D velocity profile above raceline
              "racetraj_vel_3d_stepsize": 0.5,   # [m] vertical lines stepsize in 3D velocity profile plot
              "spline_normals": False,           # plot spline normals to check for crossings
              "mintime_plots": False}            # plot states, controls, friction coeffs etc. (mintime only)
@@ -68,7 +69,7 @@ file_paths["track_name"] = MAP_NAME
 # set import options ---------------------------------------------------------------------------------------------------
 imp_opts = {"flip_imp_track": False,                # flip imported track to reverse direction
             "set_new_start": False,                 # set new starting point (changes order, not coordinates)
-            "new_start": np.array([0.0, -47.0]),    # [x_m, y_m]
+            "new_start": None,                      # [x_m, y_m]
             "min_track_width": None,                # [m] minimum enforced track width (set None to deactivate)
             "num_laps": 1}                          # number of laps to be driven (significant with powertrain-option),
                                                     # only relevant in mintime-optimization
@@ -77,8 +78,8 @@ imp_opts = {"flip_imp_track": False,                # flip imported track to rev
 # 'shortest_path'       shortest path optimization
 # 'mincurv'             minimum curvature optimization without iterative call
 # 'mincurv_iqp'         minimum curvature optimization with iterative call
-# 'mintime'             time-optimal trajectory optimization
-opt_type = 'mintime'
+# 'mintime'             time-optimal trajectory optimization DON'T CALL
+opt_type = OPT_TYPE
 
 # set mintime specific options (mintime only) --------------------------------------------------------------------------
 # tpadata:                      set individual friction map data file if desired (e.g. for varmue maps), else set None,
