@@ -43,7 +43,7 @@ If you generated the map through `slam_toolbox`, consult https://stevengong.co/n
 You might need to photoshop the map first to remove any artifacts and have clear track boundaries.
 
 The raceline creation process was simplified:
-* `1.` Add your map to the `/inputs` directory.
+* `1.` Add your map to the `/maps` directory.
 * `2.` Run the `raceline.ipynb` notebook (don't forget to specify the map). Check the extracted center line in the second cell (key addition to the original repository: photoshopping the spurs out is not necessary). If you are satisfied with the result, type `y` in the input window. This will run the script to optimize your trajectory.
 * `3.` Check the visualization in the third cell and you are good to go! The output will be saved into the /outputs directory (unless you have specified otherwise).
 
