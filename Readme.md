@@ -24,22 +24,12 @@ calculating the global race trajectory.
 
 # Getting Started
 
-First, clone the repository
-```bash
-git clone https://github.com/CL2-UWaterloo/Raceline-Optimization.git
-cd Raceline-Optimization
-```
-
-Then, set up your virtual environment. Conda is the recommended method.
+Set up your virtual environment
 
 ```bash
-conda create --name raceline python=3.8
+conda create --name raceline python=3.12
 conda activate raceline
 ```
-
-Lots of the required functions for trajectory planning are cumulated in the trajectory planning helpers repository.
-
-**Note**: A fork of the trajectory planning helper repository is used in the `requirements.txt` file instead of the original repository due to issues with outdated `quadprog` library.
 
 Install the required python packages
 ```bash
@@ -52,37 +42,13 @@ pip install -r requirements.txt
 If you generated the map through `slam_toolbox`, consult https://stevengong.co/notes/Raceline-Optimization.
 You might need to photoshop the map first to remove any artifacts and have clear track boundaries.
 
-First, run `map_converter.ipynb`, and then run `sanity_check.ipynb` to make sure the line generated is correct.
+The raceline creation process was simplified:
+* `1.` Add your map to the `/inputs` directory.
+* `2.` Run the `raceline.ipynb` notebook (don't forget to specify the map). Check the extracted center line in the second cell (key addition to the original repository: photoshopping the spurs out is not necessary). If you are satisfied with the result, type `y` in the input window. This will run the script to optimize your trajectory.
+* `3.` Check the visualization in the third cell and you are good to go! The output will be saved into the /outputs directory (unless you have specified otherwise).
 
-This will export a `.csv` file of the map to `inputs/tracks`.
-
-### For Waypoint Generator
-Alternatively, if you generated the map by storing a set of waypoints, you can directly store it inside `inputs/tracks`.
-
-### Common steps
-Then, run `main_globaltraj_f110.py` with the map name to generate the trajectory (expects the map to be inside `inputs/tracks`). By default, the generated raceline will be stored inside `outputs/<map_name>`.
-
-```bash
-python3 main_globaltraj_f110.py --map_name e7_floor5_square
-```
-
-Optionally, you can also specify a `--map_path` and `--export_path`:
-
-```bash
-python3 main_globaltraj_f110.py --map_name e7_floor5_square --map_path ~/workspaces/racetracks/e7_floor5_square.csv --export_path /tmp/traj_race_cl.csv
-```
-
-The code is developed with Ubuntu 20.04 LTS and Python 3.8.
-
-### Solutions for possible installation problems (Windows)
-* `cvxpy`, `cython` or any other package requires a `Visual C++ compiler` -> Download the build tools for Visual Studio
-2019 (https://visualstudio.microsoft.com/de/downloads/ -> tools for Visual Studio 2019 -> build tools), install them and
-chose the `C++ build tools` option to install the required C++ compiler and its dependencies
-* Problems with quadprog -> reason currently not clear, test using quadprog in version 0.1.6 instead 0.1.7
-
-### Solutions for possible installation problems (Ubuntu)
-* `matplotlib` requires `tkinter` -> can be solved by `sudo apt install python3-tk`
-* `Python.h` required `quadprog` -> can be solved by `sudo apt install python3-dev`
+If you see that your centerline is incomplete, check the binarization constraints (your drivable area might be a darker shade of grey). 
+If the track is very complex and includes a lot of obstacles of any kind, try decrease the THRESHOLD value.
 
 # Creating your own friction map
 The script `main_gen_frictionmap.py` can be used to create your own friction map for any race track file supplied in the
