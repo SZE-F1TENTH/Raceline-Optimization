@@ -1,7 +1,7 @@
 # Introduction
 This repository contains algorithms that allow us to determine an optimal racing line on a race track. You can chose
 between several objectives:
-* Shortest path
+* Shortest pathddsfdsf
 * Minimum curvature (with or without iterative call)
 * Minimum time
 * Minimum time with powertrain behavior consideration
